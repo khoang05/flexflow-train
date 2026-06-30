@@ -22,9 +22,7 @@ TEST_SUITE(FF_TEST_SUITE) {
     nonnegative_int nn_int_1a = 1_n;
     nonnegative_int nn_int_1b = 1_n;
     nonnegative_int nn_int_2 = 2_n;
-    SUBCASE("LHS: nonnegative_int, RHS: nonnegative_int, equal") {
-      CHECK(nn_int_1a == nn_int_1b);
-    }
+CHECK(1_n == 1_n);
     SUBCASE("LHS: nonnegative_int, RHS: nonnegative_int, not equal") {
       CHECK_FALSE(nn_int_1a == nn_int_2);
     }
