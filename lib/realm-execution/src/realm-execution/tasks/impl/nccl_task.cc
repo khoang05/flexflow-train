@@ -1,5 +1,5 @@
 #include "realm-execution/tasks/impl/nccl_task.h"
-
+#include "kernels/device.h"
 #include "realm-execution/tasks/impl/nccl_task_args.dtg.h"
 #include "realm-execution/tasks/impl/serializable_nccl_task_args.h"
 #include "realm-execution/tasks/serializer/task_arg_serializer.h"
@@ -9,6 +9,22 @@
 #include <nccl.h>
 
 namespace FlexFlow {
+
+ncclResult_t run_nccl_all_reduce(void const *send_buffer,
+                                void *receive_buffer,
+                                size_t count,
+                                ncclDataType_t data_type,
+                                ncclRedOp_t reduction_op,
+                                ncclComm_t communicator,
+                                ffStream_t stream) {
+  return ncclAllReduce(send_buffer,
+                       receive_buffer,
+                       count,
+                       data_type,
+                       reduction_op,
+                       communicator,
+                       stream);
+}
 
 void nccl_task_body(void const *args,
                     size_t arglen,
