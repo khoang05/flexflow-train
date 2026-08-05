@@ -22,17 +22,18 @@ ncclResult_t run_nccl_broadcast(void const *send_buffer,
                                 void *receive_buffer,
                                 size_t count,
                                 ncclDataType_t data_type,
-                                ncclRedOp_t reduction_op,
+                                int root_rank,
                                 ncclComm_t communicator,
                                 ffStream_t stream);
 
 ncclResult_t run_nccl_reduce(void const *send_buffer,
-                                void *receive_buffer,
-                                size_t count,
-                                ncclDataType_t data_type,
-                                ncclRedOp_t reduction_op,
-                                ncclComm_t communicator,
-                                ffStream_t stream);
+                             void *receive_buffer,
+                             size_t count,
+                             ncclDataType_t data_type,
+                             ncclRedOp_t reduction_op,
+                             int root_rank,
+                             ncclComm_t communicator,
+                             ffStream_t stream);
 
 void nccl_task_body(void const *args,
     size_t arglen,
