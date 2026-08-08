@@ -4,10 +4,16 @@ type = "struct"
 features = [
   "json",
 ]
+
 includes = [
-  "string",
+  "realm-execution/tasks/serializer/serializable_tensor_instance_backing.dtg.h",
+  "task-spec/dynamic_graph/serializable_dynamic_node_invocation.dtg.h",
 ]
 
 [[fields]]
-name = "message"
-type = "std::string"
+name = "invocation"
+type = "::FlexFlow::SerializableDynamicNodeInvocation"
+
+[[fields]]
+name = "tensor_backing"
+type = "::FlexFlow::SerializableTensorInstanceBacking"

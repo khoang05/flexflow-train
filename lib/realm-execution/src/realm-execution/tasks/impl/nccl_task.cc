@@ -79,16 +79,18 @@ void nccl_task_body(void const *args,
     return;
   }
 
-  std::printf("%s\n", task_args.message.c_str());
   std::printf("NCCL version: %d\n", nccl_version);
 }
 
-Realm::Event spawn_nccl_task(RealmContext &ctx,
-                             Realm::Processor target_proc,
-                             std::string const &message,
-                             Realm::Event precondition) {
+Realm::Event spawn_nccl_task(
+    RealmContext &ctx,
+    Realm::Processor target_proc,
+    DynamicNodeInvocation const &invocation,
+    TensorInstanceBacking const &tensor_backing,
+    Realm::Event precondition) {
   NcclTaskArgs task_args = NcclTaskArgs{
-      /*message=*/message,
+      /*invocation=*/invocation,
+      /*tensor_backing=*/tensor_backing,
   };
 
   std::string serialized_args =

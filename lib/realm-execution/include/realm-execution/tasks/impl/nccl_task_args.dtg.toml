@@ -4,9 +4,14 @@ type = "struct"
 features = []
 
 includes = [
-  "string",
+  "realm-execution/tensor_instance_backing.dtg.h",
+  "task-spec/dynamic_graph/dynamic_node_invocation.dtg.h",
 ]
 
 [[fields]]
-name = "message"
-type = "std::string"
+name = "invocation"
+type = "::FlexFlow::DynamicNodeInvocation"
+
+[[fields]]
+name = "tensor_backing"
+type = "::FlexFlow::TensorInstanceBacking"

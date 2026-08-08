@@ -1,6 +1,8 @@
 #ifndef _FLEXFLOW_LIB_REALM_EXECUTION_INCLUDE_REALM_EXECUTION_TASKS_IMPL_NCCL_TASK_H
 #define _FLEXFLOW_LIB_REALM_EXECUTION_INCLUDE_REALM_EXECUTION_TASKS_IMPL_NCCL_TASK_H
 
+#include "realm-execution/tensor_instance_backing.dtg.h"
+#include "task-spec/dynamic_graph/dynamic_node_invocation.dtg.h"
 #include "kernels/device.h"
 #include <nccl.h>
 #include "realm-execution/realm.h"
@@ -41,9 +43,11 @@ void nccl_task_body(void const *args,
     size_t userdata_len,
     Realm::Processor proc);
 
-Realm::Event spawn_nccl_task(RealmContext &ctx,
+Realm::Event spawn_nccl_task(
+    RealmContext &ctx,
     Realm::Processor target_proc,
-    std::string const &message,
+    DynamicNodeInvocation const &invocation,
+    TensorInstanceBacking const &tensor_backing,
     Realm::Event precondition);
 
 }

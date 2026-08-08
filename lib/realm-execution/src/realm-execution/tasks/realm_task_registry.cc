@@ -135,6 +135,11 @@ Realm::Event register_all_tasks() {
   }
 
   pending_registrations.push_back(
+      register_task(Realm::Processor::LOC_PROC,
+                    task_id_t::NCCL_HELLO_WORLD_TASK_ID,
+                    nccl_task_body));
+
+  pending_registrations.push_back(
       register_task(Realm::Processor::TOC_PROC,
                     task_id_t::NCCL_HELLO_WORLD_TASK_ID,
                     nccl_task_body));
