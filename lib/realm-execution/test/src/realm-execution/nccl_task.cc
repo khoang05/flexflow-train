@@ -1,7 +1,10 @@
 #include "internal/realm_test_utils.h"
+#include "op-attrs/ops/broadcast_attrs.dtg.h"
+#include "op-attrs/pcg_operator_attrs.dtg.h"
 #include "realm-execution/realm_manager.h"
 #include "realm-execution/tasks/impl/nccl_task.h"
 #include "realm-execution/tensor_instance_backing.h"
+#include "task-spec/dynamic_graph/training_operation_attrs.dtg.h"
 
 #include <cuda_runtime.h>
 #include <doctest/doctest.h>
@@ -32,7 +35,18 @@ TEST_CASE("NCCL task spawns successfully") {
                 /*task_type=*/std::nullopt,
                 /*device_coord=*/std::nullopt,
                 /*mapping=*/std::nullopt,
-                /*op_attrs=*/std::nullopt,
+                /*op_attrs=*/
+                TrainingOperationAttrs{
+                    PCGOperatorAttrs{
+                        BroadcastAttrs{
+                            TensorDims{
+                                FFOrdered{
+                                    8_p,
+                                },
+                            },
+                        },
+                    },
+                },
                 /*layer_guid=*/
                 dynamic_layer_guid_t{
                     parallel_layer_guid_t{
