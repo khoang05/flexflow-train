@@ -7,9 +7,9 @@
 namespace FlexFlow {
 
 SerializableNcclTaskArgs
-    nccl_task_args_to_serializable(NcclTaskArgs const &);
+    nccl_task_args_to_serializable(NCCLTaskArgs const &);
 
-NcclTaskArgs
+NCCLTaskArgs
     nccl_task_args_from_serializable(SerializableNcclTaskArgs const &);
 
 } // namespace FlexFlow

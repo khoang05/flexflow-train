@@ -1,5 +1,6 @@
 #include "internal/realm_test_utils.h"
-#include "op-attrs/ops/broadcast_attrs.dtg.h"
+#include "realm-execution/distributed_ff_handle.h"
+#include "op-attrs/ops/replicate_attrs.dtg.h"
 #include "op-attrs/pcg_operator_attrs.dtg.h"
 #include "realm-execution/realm_manager.h"
 #include "realm-execution/tasks/impl/nccl_task.h"
@@ -19,7 +20,7 @@ TEST_SUITE(FF_CUDA_TEST_SUITE) {
 
 TEST_CASE("NCCL task spawns successfully") {
   std::vector<char *> fake_args =
-      make_fake_realm_args(/*num_cpus=*/1_p, /*num_gpus=*/0_n);
+      make_fake_realm_args(/*num_cpus=*/1_p, /*num_gpus=*/1_n);
 
   int fake_argc = fake_args.size();
   char **fake_argv = fake_args.data();
@@ -28,6 +29,18 @@ TEST_CASE("NCCL task spawns successfully") {
 
   ControllerTaskResult result =
       manager.start_controller([](RealmContext &ctx) {
+          Realm::Machine::ProcessorQuery processor_query(
+              Realm::Machine::get_machine());
+          processor_query.only_kind(Realm::Processor::TOC_PROC);
+
+        Realm::Processor gpu_proc = processor_query.first();
+
+        DistributedFfHandle distributed_handle =
+            create_distributed_ff_handle(
+                ctx,
+                /*workSpaceSize=*/1024 * 1024,
+                /*allowTensorOpMathConversion=*/true,
+                Realm::Event::NO_EVENT);
         DynamicNodeInvocation invocation{
             /*inputs=*/{},
             /*node_attrs=*/
@@ -38,12 +51,8 @@ TEST_CASE("NCCL task spawns successfully") {
                 /*op_attrs=*/
                 TrainingOperationAttrs{
                     PCGOperatorAttrs{
-                        BroadcastAttrs{
-                            TensorDims{
-                                FFOrdered{
-                                    8_p,
-                                },
-                            },
+                        ReplicateAttrs{
+                            /*replicate_degree=*/8_p,
                         },
                     },
                 },
@@ -63,9 +72,10 @@ TEST_CASE("NCCL task spawns successfully") {
 
         Realm::Event event = spawn_nccl_task(
             ctx,
-            ctx.get_current_processor(),
+            gpu_proc,
             invocation,
             tensor_backing,
+            distributed_handle.at(gpu_proc),
             Realm::Event::NO_EVENT);
 
         event.wait();

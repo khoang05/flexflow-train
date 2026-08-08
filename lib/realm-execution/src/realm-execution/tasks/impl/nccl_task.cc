@@ -68,7 +68,7 @@ void nccl_task_body(void const *args,
   (void)userdata_len;
   (void)proc;
 
-  NcclTaskArgs task_args = nccl_task_args_from_serializable(
+  NCCLTaskArgs task_args = nccl_task_args_from_serializable(
       deserialize_task_args<SerializableNcclTaskArgs>(args, arglen));
 
   int nccl_version = 0;
@@ -87,10 +87,12 @@ Realm::Event spawn_nccl_task(
     Realm::Processor target_proc,
     DynamicNodeInvocation const &invocation,
     TensorInstanceBacking const &tensor_backing,
+    DeviceSpecificPtr<ManagedPerDeviceFFHandle> const &device_handle,
     Realm::Event precondition) {
-  NcclTaskArgs task_args = NcclTaskArgs{
+  NCCLTaskArgs task_args = NCCLTaskArgs{
       /*invocation=*/invocation,
       /*tensor_backing=*/tensor_backing,
+      /*device_handle=*/device_handle,
   };
 
   std::string serialized_args =

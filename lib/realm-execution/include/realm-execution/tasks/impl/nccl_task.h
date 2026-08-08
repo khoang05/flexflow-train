@@ -1,6 +1,7 @@
 #ifndef _FLEXFLOW_LIB_REALM_EXECUTION_INCLUDE_REALM_EXECUTION_TASKS_IMPL_NCCL_TASK_H
 #define _FLEXFLOW_LIB_REALM_EXECUTION_INCLUDE_REALM_EXECUTION_TASKS_IMPL_NCCL_TASK_H
 
+#include "realm-execution/device_specific_managed_per_device_ff_handle.h"
 #include "realm-execution/tensor_instance_backing.dtg.h"
 #include "task-spec/dynamic_graph/dynamic_node_invocation.dtg.h"
 #include "kernels/device.h"
@@ -48,6 +49,7 @@ Realm::Event spawn_nccl_task(
     Realm::Processor target_proc,
     DynamicNodeInvocation const &invocation,
     TensorInstanceBacking const &tensor_backing,
+    DeviceSpecificPtr<ManagedPerDeviceFFHandle> const &device_handle,
     Realm::Event precondition);
 
 }
